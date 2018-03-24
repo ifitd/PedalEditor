@@ -1,0 +1,326 @@
+<!-- Defines element markup -->
+<template>
+    <style>
+       
+    </style>
+
+	<div class="pedal">
+		
+		<!-- <p class="knob-label" id="knob1-label" contenteditable="true">FREQ</p> -->
+		<webaudio-switch src="../img/switches/switch_1.png" class="switch" id="switch1" height="64" width="128"></webaudio-switch>
+	</div>
+
+    
+</template>
+
+<script>
+    (function(window, document, undefined) {
+    
+        // Refers to the "importer", which is index.html
+        var thatDoc = document;
+
+        // Refers to the "importee", which is vimeo-embed.html
+        var thisDoc = (thatDoc._currentScript || thatDoc.currentScript).ownerDocument;
+
+        // Gets content from <template>.
+        var template = thisDoc.querySelector( 'template' );
+		
+
+        // Shim Shadow DOM styles if needed
+        if (window.ShadowDOMPolyfill) {
+            WebComponents.ShadowCSS.shimStyling(template.content, 'pedal');
+        }
+	
+
+        class Pedal extends HTMLElement {
+			static get observedAttributes() {
+    			return ['color', 'width', 'height', 'radius'];
+  			}
+			
+
+            constructor(wi) {
+                super();
+				this.knobs = [];
+				this.selectedKnob = null;
+            }
+
+			
+
+
+			
+			addKnob() {
+				var knob = {
+					id: "knob_" + this.knobs.length,
+					x: 43,
+					y: 30,
+					model: 'knob2.png',
+					value: 20,
+					label: 'knbo_' + this.knobs.length,
+					label_fontfamily: 'Comic Sans MS',
+					label_fontsize: '14',
+					label_color: '000000'
+				};
+				this.knobs.push(knob);
+				
+				var that = this;
+				
+				var knobContainer = thatDoc.createElement("div");
+				knobContainer.setAttribute('class', 'knob');
+				knobContainer.setAttribute('id', knob.id);
+
+				var knobElem = thatDoc.createElement("webaudio-knob");
+				knobElem.setAttribute('sprites', 100);
+				knobElem.setAttribute('value', 0);
+				knobElem.setAttribute('step', 1);
+				knobElem.setAttribute('src', '../img/knobs/' + knob.model);
+				
+				knobContainer.appendChild(knobElem);
+
+				var label = thatDoc.createElement('div');
+				label.innerHTML = knob.id;
+				knobContainer.appendChild(label);
+
+				knobContainer.addEventListener('mousedown', function(event) {
+					event.stopPropagation();
+				
+					
+					let initialX = event.pageX;
+					let initialY = event.pageY;
+
+					let posX = knob.x;
+					let posY = knob.y;
+
+
+					function move(x, y) {
+						let finalX = x - initialX;
+						let finalY = y - initialY;
+
+						knob.x = posX + finalX;
+						knob.y = posY + finalY;
+						that.updateStyle(that);
+					}
+					
+					function onMouseMove(e) {
+						if(that.selectedKnob === knob) {
+							move(e.pageX, e.pageY);
+						}
+					}
+					
+					event.preventDefault();
+					document.addEventListener('mousemove', onMouseMove);
+
+					// (4) drop the ball, remove unneeded handlers
+					document.onmouseup = function() {
+						document.removeEventListener('mousemove', onMouseMove);
+						document.onmouseup = null;
+					};
+				}, true);
+
+				
+				
+
+				function onMouseMove(e) {
+					e.preventDefault();
+					move(e.pageX, e.pageY);
+				}
+
+				knobContainer.onclick = function(e) {
+					let knobId = e.target.parentElement.parentElement.id;
+					if(!knobId) {
+						that.selectKnob(e.target.parentElement.id);
+						return;
+					} else 
+						that.selectKnob(knobId);
+
+				};
+
+				this.shadowRoot.querySelector('.pedal').appendChild(knobContainer);
+
+				this.selectKnob(knob.id);
+				this.updateStyle(this)
+			}
+
+			getKnobs() {
+				return this.knobs;
+			}
+
+			setSrc(src) {
+				this.src = src;
+			}
+
+            connectedCallback() {
+                var shadowRoot = this.attachShadow({mode:'open'});
+    
+                var clone = thatDoc.importNode( template.content, true );
+                shadowRoot.appendChild(clone);
+				this.updateStyle(this);
+            }
+
+			updateStyle_() {
+				this.updateStyle(this);
+			}
+
+			updateCurrentButton() {
+
+			}
+
+			selectButton() {
+
+			}
+
+			getSelectedKnob() {
+				return this.selectedKnob;
+			}
+
+			selectKnob(knobId) {
+
+				for(let knob of this.knobs) {
+					if(knob.id === knobId) {
+						this.selectedKnob = knob;
+						this.highlightKnob(knobId);
+					}
+				}
+				
+				let evt = new CustomEvent('select-knob', {detail: knobId});
+          		this.dispatchEvent(evt);
+			}
+
+			highlightKnob(knobId) {
+				var shadow = this.shadowRoot;
+				
+				for(let i = 0; i < this.knobs.length; i++) {
+					let knob = shadow.querySelector('#knob_' + i);
+					knob.className = knob.className.replace('selected', '');
+				}
+				
+				let selectedKnob = shadow.querySelector('#' + knobId);
+				selectedKnob.className += " selected";
+				//var knob = shadow.querySelector('#knob_0');
+				//knob.addClass('selected');
+				//console.log(knob);
+			}
+
+			updateStyle(elem) {
+				var shadow = elem.shadowRoot;
+				var childNodes = shadow.childNodes;
+				for(var childNode of childNodes) {
+					if(childNode.nodeName === 'STYLE') {				
+
+						childNode.textContent = `
+							.pedal{
+								display: block;
+								background-color: ${this.getAttribute('color')};
+								width: ${this.getAttribute('width')}px;
+								height: ${this.getAttribute('height')}px;
+								border-radius: ${this.getAttribute('radius')}px;
+								box-shadow: inset -3px -3px 3px 5px rgba(0, 0, 0, 0.6), inset 3px 3px 3px 5px rgba( 255, 255, 255, 0.5);
+								position: fixed;
+								top: 40%;
+								left: 50%;
+								/* bring your own prefixes */
+								transform: translate(-50%, -50%);
+							}
+							
+							.knob, .switch{
+								position: absolute;
+								cursor: pointer;
+							}
+
+							.selected {
+								border: 1px dashed black;
+								cursor: move;
+							}
+
+							.selected:hover {
+								border: 1px dashed black;
+								cursor: move;
+							}
+
+							.selected  webaudio-knob{
+								cursor: move;
+							}
+
+							.selected:hover webaudio-knob{
+								cursor: move;
+							}
+
+
+							#switch1 {
+								bottom: 30px;
+							}
+							${this.generateKnobsStyles()}
+							
+
+							#switch_2{
+								top: 30px;
+								left: 150px;
+							}
+							.pedalLabel{
+								position: absolute;
+								top: 225px;
+								font-size: 25px;
+								font-family: Sansita;/*{font}*/
+								text-align: center;
+								line-height: 30px;/*{pedalfontsize}*/
+								width: 150px;
+								color: #6B0000;/*{fontcolor}*/
+							}
+							.knob-label{
+								position: absolute;
+								font-size: 12px;/*{knobfontsize}*/
+								line-height: 12px;
+								width:64px;
+								max-width:64px;
+								overflow: hidden;
+								text-align: center;
+								font-family: Sansita;/*{font}*/
+								color: #6B0000;/*{fontcolor}*/
+							}
+							#knob1-label{
+								top: 84px;
+								left: 43px;
+							}`;
+					}
+				}
+			}
+
+			generateKnobsStyles() {
+				let ret = '';
+				for(let knob of this.knobs) {
+					ret += `
+						#${knob.id} {
+							left: ${knob.x}px;
+							top: ${knob.y}px;
+						}
+
+						#${knob.id} div {
+							color: #${knob.label_color};
+							font-family: "${knob.label_fontfamily}";
+							font-size: ${knob.label_fontsize}px;
+							
+						}
+					`
+					let knobContainer = this.shadowRoot.querySelector('#'+knob.id);
+					
+					let knobElem = knobContainer.childNodes[0];
+					knobElem.value = knob.value;
+					knobElem.src = '../img/knobs/' + knob.model;
+
+					let labelElem = knobContainer.childNodes[1];
+					labelElem.innerHTML = knob.label;
+					
+				}
+
+				
+				return ret;
+
+			}
+			
+			attributeChangedCallback(name, oldValue, newValue) {
+  				this.updateStyle(this);
+			}
+
+        }
+        window.customElements.define('my-pedal', Pedal);
+    })(window, document);
+</script>

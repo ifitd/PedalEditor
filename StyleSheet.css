@@ -1,0 +1,228 @@
+﻿body{
+	background-color: #1e0009;
+	font-family: 'Sansita', sans-serif;
+}
+
+.knob_id {
+	cursor: pointer;
+	padding: 5px;
+}
+
+.knob_id.selected{
+	background: white;
+}
+
+.component-title{
+	background-color: #822020;
+	color: #f88e81;
+	font-family: 'Orbitron', sans-serif;
+	padding: 5px;
+	margin-bottom: -20px;
+}
+
+.componentSection{
+	overflow-y: scroll;
+	height: 100%;
+	position: absolute;
+	top:0;
+	left: 0;
+	width: 20%;
+	background-color: #ab3434;
+	overflow-y: auto;
+	border-right: 3px solid #442525;
+}
+
+.componentSection-right{
+	overflow-y: scroll;
+	height: 100%;
+	position: absolute;
+	top:0;
+	left: 80%;
+	width: 20%;
+	background-color: #ab3434;
+	overflow-y: auto;
+	border-left: 3px solid #442525;
+}
+
+.componentSection img{
+	cursor: pointer;
+	margin: 3px;
+}
+
+.componentSection h2 i {
+	float:right;
+}
+
+.componentSection-right h2 i{
+	float:right;
+}
+
+.pedalSection{
+	left: 21%;
+	position: absolute;
+	background-color: #e4d6a7;
+	display: inline-block;
+	text-align: center;
+}
+
+.dial{
+	position:absolute;
+	top:10px;
+	left:10px;
+}
+
+#test{
+	height: 75px;
+	width: 75px;
+	position:absolute;
+	top: 200px;
+	left:200px;
+}
+
+.element{
+	height:75px;
+	width:75px;
+
+}
+
+::-webkit-scrollbar
+{
+	width: 12px;  /* for vertical scrollbars */
+	height: 12px; /* for horizontal scrollbars */
+}
+
+::-webkit-scrollbar-track
+{
+	background: rgba(0, 0, 0, 0.1);
+}
+
+::-webkit-scrollbar-thumb
+{
+	background: rgba(0, 0, 0, 0.5);
+}
+
+.switch_preview{
+	width:120px;
+}
+
+.fontsizeselector{
+	margin-bottom: 10px;
+}
+
+#sansita-picker{
+	font-family: 'Sansita', sans-serif;
+
+}
+
+#pangolin-picker{
+	font-family: 'Pangolin';
+}
+
+#abril-fatface-picker{
+	font-family: 'Abril Fatface';
+}
+
+#VT323-picker{
+	font-family: 'VT323';
+}
+
+#orbitron-picker{
+	font-family: 'Orbitron';
+}
+
+#shojumaru-picker{
+	font-family: 'Shojumaru';
+}
+
+#unifrakturmaguntia-picker{
+	font-family: 'UnifrakturMaguntia';
+}
+
+#rocksalt-picker{
+	font-family: 'Rock Salt';
+}
+
+#nothingyoucould-picker{
+	font-family: 'Nothing You Could Do';
+}
+
+#mogra-picker{
+	font-family: 'Mogra';
+}
+
+#calligraffitti-picker{
+	font-family: 'Calligraffitti';
+}
+
+#bungeeshade-picker{
+	font-family: 'Bungee Shade';
+}
+
+#bungeeinline-picker{
+	font-family: 'Bungee Inline';
+}
+
+#bevan-picker{
+	font-family: 'Bevan';
+}
+
+#belgrano-picker{
+	font-family: 'Belgrano';
+}
+
+p.font-picker:hover{
+	cursor: hand;
+	color:pink;
+}
+
+img.preview{
+	width:40px;
+	vertical-align: bottom;
+}
+p.typePreview{
+	font-size:50px;
+}
+
+
+.displayer{
+	cursor: pointer;
+}
+
+.menuOptions{
+	margin-top: 20px;
+}
+
+#buttonDownload{
+	position:fixed;
+	top: 90%;
+	left: 50%;
+	/* bring your own prefixes */
+	transform: translate(-50%, -50%);
+	width: auto;
+	height: 50px;
+	font-family: "Belgrano";
+	font-size: 30px;
+	background-color: #822020;
+	border-radius:10px;
+	border : solid 2px #6e111d;
+	color: #f88e81;
+}
+
+#buttonDownload:hover{
+	color: #822020;
+	background-color: #f88e81;
+}
+
+#buttonDownload:active{
+	background-color:  #822020;
+	color: #f88e81;
+}
+
+#inspector-id {
+	color: blue;
+}
+
+#inspector-preview {
+	margin-left: 35%;
+	margin-top: 20px;
+}
